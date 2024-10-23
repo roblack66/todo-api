@@ -17,3 +17,4 @@ export const userAvatarUpload = multer({
     }),
     preservePath: true
 });
+

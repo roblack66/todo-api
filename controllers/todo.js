@@ -27,10 +27,11 @@ export const addTodo = async (req, res, next) => {
 
 export const getTodos = async (req, res, next) => {
     try {
-        const { filter = "{}", limit = 10, skip = 0 } = req.query;
+        const { filter = "{}", sort = "{}", limit = 10, skip = 0 } = req.query;
         // Fetch todos from database
         const todos = await TodoModel
             .find(JSON.parse(filter))
+            .sort(JSON.parse(sort))
             .limit(limit)
             .skip(skip);
         // Return response
@@ -38,6 +39,30 @@ export const getTodos = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+export const getTodo = async (req,res,next) => {
+   try {
+     const {id} = req.params;
+     // get todo by id from database
+     const todo = await TodoModel.findById(id)
+     //respond to request
+     res.json(todo)
+   } catch (error) {
+    next(error)  
+   }
+}
+
+export const countTodos = async (req,res,next) => {
+   try {
+     const {filter = "{}"} = req.query;
+     // count todos in database
+     const count = await TodoModel.countDocuments(JSON.parse(filter));
+     // respond to request
+     res.json({count});
+   } catch (error) {
+    next(error)
+   }
 }
 
 export const updateTodo = (req, res, next) => {
